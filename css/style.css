@@ -1,0 +1,169 @@
+html,
+body,
+#app-view {
+    width: 100%;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.fa {
+    margin: 0 2px 0 2px;
+}
+
+.side-pane {
+    background-color: #2196F3;
+    width: 20%;
+}
+
+.side-pane .mdl-textfield {
+    margin: 70% 0 0 4%;
+    font-size: 2em;
+}
+
+.side-pane .mdl-textfield__input {
+    border-bottom-color: #F3E5F5;
+    color: #F3E5F5;
+    font-size: 34px;
+}
+
+.side-pane .mdl-textfield__label {
+    color: #F3E5F5;
+    font-weight: lighter;
+    font-size: 34px;
+    line-height: 24px;
+}
+
+.mdl-textfield.is-focused .mdl-textfield__focus-helper {
+    box-shadow: 0 0 0px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.main-pane {
+    width: 80%;
+    height: 97.3%;
+    margin-left: 20% !important;
+}
+
+.page-content {
+    height: inherit;
+}
+
+.mdl-tabs {
+    height: inherit;
+}
+
+.mdl-tabs__tab-bar {
+    height: 5%;
+    font-size: 1em;
+}
+
+.mdl-tabs__tab {
+    font-size: inherit;
+}
+
+.mdl-tabs__panel.is-active {
+    display: flex !important;
+}
+
+#fillers {
+    position: absolute;
+    top: 20%;
+    left: 28%;
+}
+
+#fillers i {
+    font-size: 20em;
+    color: #CFD8DC;
+    margin: 0 0 0 72px;
+}
+
+#fillers i.highlight {
+    color: #000;
+}
+
+#tweets {
+    margin: 1% 0 1% 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#tweets .page-content {
+    height: auto;
+    width: 100%;
+}
+
+#summaries {
+    white-space: nowrap !important;
+    overflow-x: auto;
+    background-color: #ddd;
+    width: 100%;
+    height: 40%;
+}
+
+#summaries .summary-card.mdl-card {
+    width: 320px;
+    height: 320px;
+    display: inline-block;
+    margin: 1% 2% 1% 2%;
+}
+
+#summaries .mdl-card > .mdl-card__title {
+    color: #fff;
+    background: url('https://placehold.it/350x350') bottom right 15% no-repeat #46B6AC;
+}
+
+.query-card.mdl-card {
+    width: 80%;
+    margin: 2%;
+}
+
+.query-card > .mdl-card__menu {
+    color: #fff;
+}
+
+#news ul {
+    list-style-type: none;
+    width: 100%;
+}
+
+#news .mdl-card {
+    width: auto;
+    margin: 0.5% 0 0.5% 0;
+    cursor: pointer;
+}
+
+#news .mdl-card:hover {
+    background-color: #ECEFF1;
+}
+
+#news .mdl-card__title,
+#news .mdl-card__supporting-text {
+    padding: 0 !important;
+}
+
+#news .mdl-card > .news-domain,
+#news .mdl-card > .news-desc {
+    font-size: 0.5em;
+}
+
+#news .news-domain h5 {
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+#news .news-image {
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+
+#news .month button {
+    text-align: center;
+    color: #F5F5F5;
+    background-color: #E91E63;
+    font-size: 1em;
+}
