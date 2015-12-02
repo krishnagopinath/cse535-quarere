@@ -1,5 +1,8 @@
 var express = require('express');
 var solr = require('solr-client');
+var translate = require('../util/translate.js');
+var alchemy = require('../util/alchemy.js');
+//var alchemy = null;
 
 var router = express.Router();
 
@@ -10,8 +13,25 @@ var client = solr.createClient({
     core: 'vsm'
 });
 
+router.use(function(req, res, next) {
+    var q = req.query.q;
+
+    //all languages 
+    var allLang = [];
+    //TODO : implement promises EVERYWHERE
+    translate(q, ['en'], function(en) {
+        alchemy.getEntities(en.join(' '), function(entities) {
+            translate(q, ['en', 'fr', 'ru', 'de'], function(allLang) {
+                req.query.q = allLang.join(' ') + ' ' + entities.join(' ');
+                next();
+            });
+        });
+    });
+});
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
     //invoke solr client here
 
     var query = client.createQuery()
