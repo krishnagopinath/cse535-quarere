@@ -1,5 +1,5 @@
 var express = require('express');
-var news = require('./news_xml2json.js');
+var news = require('../util/news_xml2json.js');
 
 router = express.Router();
 
