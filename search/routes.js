@@ -2,15 +2,14 @@ var express = require('express');
 var solr = require('solr-client');
 var translate = require('../util/translate.js');
 var alchemy = require('../util/alchemy.js');
-//var alchemy = null;
 
 var router = express.Router();
 
 var client = solr.createClient({
     solrVersion: '4.0',
-    host: '192.168.1.187',
+    host: 'ukkk58981644.kushalb.koding.io',
     port: 8983,
-    core: 'vsm'
+    core: 'bm25'
 });
 
 router.use(function(req, res, next) {
@@ -30,17 +29,21 @@ router.use(function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', [function(req, res, next) {
 
     //invoke solr client here
+
 
     var query = client.createQuery()
         .q(req.query.q)
         .edismax()
         .qf({
-            text_en: 1,
-            text_de: 1,
-            text_ru: 1
+            text_fr: 1,
+            tweet_hashtags: 1,
+            entities: 1,
+            primary_entity_types: 1,
+            sec_entity_types: 1
+
         })
         .mm(2)
         .start(req.query.start)
@@ -49,12 +52,14 @@ router.get('/', function(req, res, next) {
     client.search(query, function(err, obj) {
         if (err) {
             console.log(err);
-        } else {
-            res.send(obj.response);
         }
+
+        res.queryResult = obj.response;
+        obj.response.q = req.query.q;
+        next();
     });
-
-
-});
+}, function(req, res, next) {
+    res.send(res.queryResult);
+}]);
 
 module.exports = router;
