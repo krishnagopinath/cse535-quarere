@@ -16,13 +16,27 @@
                 <input class="mdl-textfield__input" type="text" ng-model="query" ng-keypress="sendQuery($event, query)" />
                 <label class="mdl-textfield__label" for="sample1">putin syria</label>
             </div>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
         </div>
         <main ng-controller="ResultController" class="mdl-layout__content main-pane">
             <div class="page-content">
                 <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-layout--fixed-tabs">
                     <div class="mdl-tabs__tab-bar" ng-show="showInteracts == true">
-                        <a href="#tweets" class="mdl-tabs__tab" ng-class="{'is-active':showTweets }" ng-show="tweets.length > 0" scroll-to-top><i class="fa fa-twitter"></i>Tweets</a>
-                        <a href="#news" class="mdl-tabs__tab" ng-class="{'is-active':!showTweets }" ng-show="news.length > 0" scroll-to-top><i class="fa fa-newspaper-o"></i>News</a>
+                        <a href="#tweets" class="mdl-tabs__tab" ng-class="{'is-active':showTweets }" ng-show="tweets.length > 0" scroll-to-top>
+                            <i class="fa fa-twitter">
+                            
+                        </i>Tweets
+                        </a>
+                        <a href="#news" class="mdl-tabs__tab" ng-class="{'is-active':!showTweets }" ng-show="news.length > 0" scroll-to-top>
+                            <i class="fa fa-newspaper-o">
+                            
+                        </i>News
+                        </a>
                     </div>
                     <div id="fillers" ng-show="showInteracts == false">
                         <i class="fa fa-keyboard-o"></i><i class="fa fa-search"></i><i class="fa fa-file-o"></i>
@@ -30,88 +44,30 @@
                     <div id="tweets" class="mdl-tabs__panel" ng-class="{'is-active' : showInteracts}" scroll-end scroll-to-top>
                         <div class="page-content">
                             <div id="summaries">
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
+                                <div ng-repeat="summary in summaries" class="summary-card mdl-card mdl-shadow--2dp">
+                                    <div class="mdl-card__title mdl-card--expand" data-bg="{{summary.img}}" get-bg>
                                     </div>
                                     <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
-                                    </div>
-                                </div>
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
-                                    </div>
-                                    <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
-                                    </div>
-                                </div>
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
-                                    </div>
-                                    <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
-                                    </div>
-                                </div>
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
-                                    </div>
-                                    <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
-                                    </div>
-                                </div>
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
-                                    </div>
-                                    <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
-                                    </div>
-                                </div>
-                                <div class="summary-card mdl-card mdl-shadow--2dp">
-                                    <div class="mdl-card__title mdl-card--expand">
-                                        <h2 class="mdl-card__title-text">Update</h2>
-                                    </div>
-                                    <div class="mdl-card__supporting-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenan convallis.
-                                    </div>
-                                    <div class="mdl-card__actions mdl-card--border">
-                                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Updates</a>
+                                        <h2 class="mdl-card__title-text">
+                                        {{ summary.title  | truncate:20 }}
+                                        </h2> {{summary.summary | truncate:100}}
+                                        <a ng-href="{{summary.url}}" target="_blank" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read more</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="mdl-grid">
                                 <div class="mdl-cell mdl-cell--4-col" ng-repeat="tweet in tweets">
                                     <div class="query-card mdl-card mdl-shadow--2dp">
-                                        <div class="mdl-card__title">
-                                            <h5 class="mdl-card__title-text">{{tweet.text_en + tweet.text_de + tweet.text_ru}}</h5>
+                                        <div class="mdl-card__supporting-text" ng-click="reachLink(tweet.id)">
+                                            <div ng-bind-html="tweet.text_fr_hl"></div>
                                         </div>
-                                        <div class="entities-list mdl-card__actions mdl-card--border" ng-show="checkEntities(tweet)">
-                                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                                Button
+                                        <div class="entities-list mdl-card__actions mdl-card--border" ng-show="tweet.entities.length>0">
+                                            <button ng-repeat="entity in tweet.entities" ng-click="drawGraph(entity)" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                                {{entity}}
                                             </button>
-                                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                                Button
-                                            </button>
-                                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                                Button
+                                        </div>
+                                        <div class="mdl-card__actions mdl-card--border">
+                                            <button class="user-profile mdl-button mdl-js-button mdl-button--fab" data-bg="{{tweet.profile_image_url}}" get-bg>
                                             </button>
                                         </div>
                                     </div>
@@ -122,9 +78,9 @@
                     <div id="news" class="mdl-tabs__panel mdl-grid">
                         <ul>
                             <li ng-repeat="newsItem in news" class="mdl-js-ripple-effect">
-                                <div class="mdl-card mdl-shadow--2dp" ng-click="reachNewsLink(newsItem.link)">
+                                <div class="mdl-card mdl-shadow--2dp" ng-click="reachLink(newsItem.link)">
                                     <div class="mdl-grid">
-                                        <div class="news-image mdl-cell mdl-cell--2-col" ng-style="{'background': getBgImage(newsItem.img)}">
+                                        <div class="news-image mdl-cell mdl-cell--2-col" data-bg="{{newsItem.img}}" get-bg>
                                         </div>
                                         <div class="news-content mdl-cell mdl-cell--10-col">
                                             <div class="news-title mdl-card__title">
@@ -151,8 +107,9 @@
                 </div>
             </div>
         </main>
-        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="/bower_components/material-design-lite/material.min.js"></script>
         <script src="js/main.js"></script>
 </body>

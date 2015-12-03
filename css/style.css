@@ -45,7 +45,7 @@ body,
 
 .main-pane {
     width: 80%;
-    height: 97.3%;
+    height: 96.3%;
     margin-left: 20% !important;
 }
 
@@ -58,7 +58,7 @@ body,
 }
 
 .mdl-tabs__tab-bar {
-    height: 5%;
+    height: 5.3%;
     font-size: 1em;
 }
 
@@ -86,7 +86,8 @@ body,
     color: #000;
 }
 
-#tweets {
+#tweets,
+#news {
     margin: 1% 0 1% 0;
     height: 100%;
     overflow-y: auto;
@@ -97,16 +98,38 @@ body,
     width: 100%;
 }
 
+#tweets .entities-list button {
+    margin: 1%;
+}
+
+#tweets .hl-text {
+    border-bottom: 1px solid #9575CD;
+    height: 24px;
+}
+
+#tweets .hl-text:hover {
+    background-color: #9575CD;
+    height: 24px;
+    color: #FAFAFA;
+}
+
+#tweets .user-profile {
+    float: right;
+    font-size: 16px;
+}
+
 #summaries {
     white-space: nowrap !important;
     overflow-x: auto;
     background-color: #ddd;
-    width: 100%;
+    width: 93%;
     height: 40%;
+    position: relative;
+    left: 1%;
 }
 
 #summaries .summary-card.mdl-card {
-    width: 320px;
+    width: 350px;
     height: 320px;
     display: inline-block;
     margin: 1% 2% 1% 2%;
@@ -114,7 +137,14 @@ body,
 
 #summaries .mdl-card > .mdl-card__title {
     color: #fff;
-    background: url('https://placehold.it/350x350') bottom right 15% no-repeat #46B6AC;
+    background: bottom right 15% no-repeat #46B6AC;
+    height: 188px;
+    width: inherit;
+}
+
+#summaries .mdl-card__supporting-text {
+    font-size: 16px;
+    white-space: normal;
 }
 
 .query-card.mdl-card {
@@ -126,6 +156,16 @@ body,
     color: #fff;
 }
 
+.query-card .mdl-card__supporting-text {
+    font-size: 16px;
+    white-space: normal;
+    cursor: pointer;
+}
+
+.query-card .mdl-card:hover {
+    background-color: #ECEFF1;
+}
+
 #news ul {
     list-style-type: none;
     width: 100%;
@@ -135,10 +175,6 @@ body,
     width: auto;
     margin: 0.5% 0 0.5% 0;
     cursor: pointer;
-}
-
-#news .mdl-card:hover {
-    background-color: #ECEFF1;
 }
 
 #news .mdl-card__title,

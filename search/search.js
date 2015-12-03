@@ -1,10 +1,3 @@
-var app = angular.module('quaerere-engine', ['ngRoute', 'ngSanitize']);
-
-app.run(function() {
-    componentHandler.upgradeAllRegistered();
-});
-
-
 app.factory('msgBus', function($rootScope) {
     return {
         emitMsg: function(id, data) {
@@ -18,9 +11,7 @@ app.factory('msgBus', function($rootScope) {
             }
         }
     };
-});
-
-app.factory('solrService', function($http) {
+}).factory('solrService', function($http) {
     return {
         getDocs: function(q, start) {;
             return $http.get('http://192.168.1.187:3000/search', {
@@ -32,9 +23,7 @@ app.factory('solrService', function($http) {
             });
         }
     }
-});
-
-app.factory('newsService', function($http) {
+}).factory('newsService', function($http) {
     return {
         getNews: function(q) {
             return $http.get('http://192.168.1.187:3000/news', {
@@ -66,7 +55,7 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
     $scope.showTweets = true;
     $scope.showScrollUpForTweets = false;
 
-    $scope.reachLink = function(link) {
+    $scope.reachNewsLink = function(link) {
         window.open(link, '_blank');
     }
     $scope.checkEntities = function() {
@@ -80,22 +69,14 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
         $scope.typing = true;
     });
 
-    $scope.getDocs = function() {
-        if ($scope.nextStartCount < $scope.docCount || !$scope.docCount) {
+    $scope.getTweets = function() {
+        if ($scope.nextStartCount <= $scope.docCount) {
             solrService.getDocs($scope.query, $scope.nextStartCount).then(function(res) {
                 console.log($scope.nextStartCount);
                 $scope.docCount = res.data.numFound;
+                $scope.nextStartCount += res.data.docs.length;
                 $scope.showInteracts = true;
                 $scope.tweets = $scope.tweets.concat(res.data.docs);
-
-                if ($scope.nextStartCount == 0) {
-                    $scope.q = res.data.q;
-                    $scope.summaries = res.data.summaries;
-                }
-
-
-                $scope.nextStartCount += res.data.docs.length;
-
             });
         } else {
             //TODO : add of end of docs message at the end.
@@ -109,30 +90,13 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
 
         $scope.query = data;
 
-        $scope.getDocs();
+        $scope.getTweets();
 
         newsService.getNews(data).then(function(res) {
             $scope.showInteracts = true;
             $scope.news = res.data;
         });
     }, $scope);
-});
-
-app.filter('truncate', function() {
-    return function(text, length, end) {
-        if (isNaN(length))
-            length = 10;
-
-        if (end === undefined)
-            end = "...";
-
-        if (text.length <= length || text.length - end.length <= length) {
-            return text;
-        } else {
-            return String(text).substring(0, length - end.length) + end;
-        }
-
-    };
 });
 
 app.directive('scrollEnd', function() {
@@ -143,8 +107,9 @@ app.directive('scrollEnd', function() {
             var raw = elem[0];
 
             elem.bind('scroll', function() {
+                console.log(raw.scrollTop + raw.offsetHeight, raw.scrollHeight);
                 if (raw.scrollTop + raw.offsetHeight + 1 >= (raw.scrollHeight)) {
-                    scope.getDocs();
+                    scope.getTweets();
                 }
             });
         }
@@ -158,21 +123,8 @@ app.directive('scrollToTop', function() {
         scope: '=',
         link: function(scope, elem, attrs) {
             elem.bind("click", function(scope, elem, attrs) {
-                window.scrollTo(0, 0);
+               window.scrollTo(0, 0);
             });
         }
     };
 });
-
-app.directive('getBg', function() {
-    return {
-        restrict: 'A',
-        scope: '=',
-        link: function(scope, elem, attrs) {
-            attrs.$observe('bg', function(value) {
-                elem.css('background', 'url(' + value + ')');
-
-            });
-        }
-    };
-})
