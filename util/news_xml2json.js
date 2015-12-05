@@ -38,27 +38,28 @@ var getNews = function(keywords, callback) {
             var r = parser.toJson(body, options);
             var p = JSON.parse(r);
             var obj = p['rss']['channel']['item'];
-            
-            for (i = 0; i < obj.length; i++) {
+            if (obj) {
+                for (i = 0; i < obj.length; i++) {
 
-                var date = new Date(obj[i].pubDate);
+                    var date = new Date(obj[i].pubDate);
 
-                var html = he.decode(obj[i].description)
+                    var html = he.decode(obj[i].description)
 
-                $ = cheerio.load(html);
+                    $ = cheerio.load(html);
 
-                news[i] = {
-                    link: obj[i].guid['$t'].split("=")[1],
-                    title: obj[i].title.escapeHTML().split('-')[0],
-                    day: date.getDate(),
-                    month: date.toLocaleString('en-us', {
-                        month: "short"
-                    }),
-                    img: $('table img').attr('src'),
-                    domain: $('table img').next().next().text(),
-                    description: $($("table .lh font")[2]).text()
+                    news[i] = {
+                        link: obj[i].guid['$t'].split("=")[1],
+                        title: obj[i].title.escapeHTML().split('-')[0],
+                        day: date.getDate(),
+                        month: date.toLocaleString('en-us', {
+                            month: "short"
+                        }),
+                        img: $('table img').attr('src'),
+                        domain: $('table img').next().next().text(),
+                        description: $($("table .lh font")[2]).text()
+                    }
+
                 }
-
             }
             callback(news);
         } else {

@@ -4,6 +4,7 @@ var translate = require('../util/translate.js');
 var alchemy = require('../util/alchemy.js');
 var ddg = require('../util/ddg.js');
 var wiki = require('../util/wiki.js');
+var _ = require("lodash");
 
 var router = express.Router();
 
@@ -60,10 +61,10 @@ var getSolrResponse = function(req, res, next) {
             field: ['primary_entity_types']
         });
         if (req.query.fq) {
-            req.query.fq.split(',').forEach(function (fqItem) {
+            req.query.fq.split(',').forEach(function(fqItem) {
                 query.matchFilter("primary_entity_types", fqItem);
                 console.log(fqItem)
-            });            
+            });
         }
     }
 
@@ -98,11 +99,11 @@ var getSolrResponse = function(req, res, next) {
             if (obj.facet_counts) {
                 facets = obj.facet_counts.facet_fields.primary_entity_types;
 
-                for (var i = 0; i < facets.length; i+=2) {
+                for (var i = 0; i < facets.length; i += 2) {
                     facetItems.push({
-                        "name" : facets[i],
-                        "count" : facets[i+1],
-                        
+                        "name": facets[i],
+                        "count": facets[i + 1],
+
                     })
                 };
             }
@@ -122,9 +123,9 @@ var getDDGSummaries = function(req, res, next) {
         //get UNIQUE entities of the top 5 results from queryResult
         var entities = (function() {
 
-            return res.queryResult.docs
+            var arr = res.queryResult.docs
                 //get top 5 docs
-                .slice(0, 5)
+                .slice(0, 15)
                 //get entities from top 5
                 .map(function(doc) {
                     return doc.entities;
@@ -137,13 +138,22 @@ var getDDGSummaries = function(req, res, next) {
                 .join('|')
                 .toLowerCase()
                 .split('|')
-                //sort to remove duplicates
-                .sort()
-                //remove duplicates
-                .filter(function(item, pos, ary) {
-                    return !pos || item != ary[pos - 1] && item != undefined;
+                .filter(function(val) {
+                    return val.length !== 0
                 });
 
+            arr = _.countBy(arr.sort(), function(val) {
+                return val;
+            });
+
+            arr = Object.keys(arr).map(function(en) {
+                return {
+                    name: en,
+                    freq: arr[en]
+                }
+            });
+
+            return arr;
         })();
 
         //call ddg
@@ -178,7 +188,6 @@ var getWikiSummaries = function(req, res, next) {
         });
         console.log(entities);
         */
-
         wiki.getSummaries(res.queryResult.summaries, function(wikiSummaries) {
             res.queryResult.summaries = wikiSummaries;
             next();
@@ -190,7 +199,7 @@ var getWikiSummaries = function(req, res, next) {
 }
 
 var sendResponse = function(req, res, next) {
-    
+
     res.send(res.queryResult);
 }
 

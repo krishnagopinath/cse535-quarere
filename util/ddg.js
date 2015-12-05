@@ -7,31 +7,37 @@ var getSummaries = function(entities, onDone) {
 
     var summaries = [];
 
+
     async.each(entities, function(entity, callback) {
 
-        ddg.instantAnswer(entity, {
+
+        ddg.instantAnswer(entity.name, {
             skip_disambig: '0'
         }, function(err, response) {
             var summary;
             if (response.Image || response.AbstractText) {
                 summary = {
-                    name: entity,
+                    name: entity.name,
                     img: response.Image,
                     title: response.Heading,
                     source: response.AbstractSource,
                     summary: response.AbstractText,
                     url: response.AbstractURL,
-                    hasData: true
+                    hasData: true,
+                    freq: entity.freq
                 }
 
             } else {
-                var summary = {}
+                var summary = {
 
-                //no data found, check related topics
+                    }
+                    //no data found, check related topics
                 if (response.RelatedTopics && response.RelatedTopics.length) {
                     var topic = response.RelatedTopics[0];
+
                     summary = {
-                        name: entity,
+                        freq: entity.freq,
+                        name: entity.name,
                         img: topic.Icon.URL,
                         title: response.Heading,
                         source: response.AbstractSource,
@@ -42,7 +48,8 @@ var getSummaries = function(entities, onDone) {
                 } else {
                     //mark it for later searching at wiki
                     summary = {
-                        name: entity,
+                        name: entity.name,
+                        freq: entity.freq,
                         hasData: false
                     }
                 }
