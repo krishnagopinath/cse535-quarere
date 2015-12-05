@@ -290,8 +290,12 @@ body,
 #news .mdl-card__title,
 #news .mdl-card__supporting-text {
     padding: 0 !important;
+    color :rgba(0,0,0, 0.54) !important;
 }
 
+#news .mdl-card__supporting-text h5{
+    color :rgba(0,0,0, 0.54) !important
+}
 #news .mdl-card > .news-domain,
 #news .mdl-card > .news-desc {
     font-size: 0.5em;
