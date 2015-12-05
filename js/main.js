@@ -102,6 +102,15 @@ app.directive('toggleFacet', function() {
 
 app.controller('ResultController', function($scope, msgBus, solrService, newsService) {
 
+    /*Start Graph*/
+
+    $scope.showGraph = false;
+    $scope.graphEntity = '';
+
+
+    /*End Graph*/
+
+
     $scope.query = '';
     $scope.tweets = [];
     $scope.news = [];
@@ -110,14 +119,37 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
     $scope.facets = [];
     $scope.fq = [];
     $scope.facetSet = false;
+
+
     $scope.reachLink = function(link) {
         window.open(link, '_blank');
+    }
+    $scope.goToUser = function(link) {
+        var user = link.split('/status')[0];
+        window.open(user, '_blank');
     }
     $scope.checkEntities = function() {
         return true;
     }
     $scope.getBgImage = function(src) {
         return 'url(' + src + ')';
+    }
+    $scope.drawGraph = function(entity) {
+        $scope.graphEntity = entity;
+        $scope.showGraph = true;
+        document.querySelector("#graph-target").innerHTML = '';
+        var myTank = new tank({
+            id: 'graph-target',
+            query: {
+                query: 'MATCH path=(n {name: "' + entity + '"})-[Knows*2]-(result) RETURN result,path ORDER BY result.count DESC'
+            },
+            neo4j: {
+                url: 'http://192.168.1.169:7474',
+                user: 'neo4j',
+                password: '37746'
+            },
+            plugins: ['query', 'data', 'codemirror', 'graphtools', 'sigma_dragnode', 'discoverGraph']
+        });
     }
 
     msgBus.onMsg('typing', function() {
@@ -143,7 +175,7 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
                         $scope.summaries = res.data.summaries;
                         msgBus.emitMsg('facetTypes', res.data.facets);
                     }
-                   
+
                     $scope.tweets = res.data.docs;
                 }
 

@@ -3,6 +3,7 @@
 
 <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/tank-browser.min.css">
     <link rel="stylesheet" href="/bower_components/material-design-lite/material.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -12,9 +13,8 @@
 <body ng-app="quaerere-engine">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
         <div ng-controller="SearchController" class="mdl-layout__drawer side-pane">
-            <div class="mdl-textfield mdl-js-textfield ">
-                <input class="mdl-textfield__input" type="text" ng-model="query" ng-keypress="sendQuery($event, query)" />
-                <label class="mdl-textfield__label" for="sample1">putin syria</label>
+            <div class="mdl-textfield">
+                <input class="mdl-textfield__input" placeholder="putin syria" type="text" ng-model="query" ng-keypress="sendQuery($event, query)" />
             </div>
             <div class="facet-grid">
                 <button ng-repeat="facet in facetTypes" class="mdl-button mdl-js-button" data-entity="{{facet.name}}" toggle-facet>{{facet.name }} ({{facet.count}})</button>
@@ -35,7 +35,8 @@
                         </i>News
                         </a>
                     </div>
-                    <div id="fillers" ng-show="showInteracts == false">
+                    <div id="fillers" ng-show="showInteracts == false && showGraph == false">
+                        <h1 class="css-typing">quaerere</h1>
                         <i class="fa fa-keyboard-o"></i><i class="fa fa-search"></i><i class="fa fa-file-o"></i>
                     </div>
                     <div id="tweets" class="mdl-tabs__panel" ng-class="{'is-active' : showInteracts}" scroll-end scroll-to-top>
@@ -47,7 +48,7 @@
                                     <div class="mdl-card__supporting-text">
                                         <h2 class="mdl-card__title-text">
                                         {{ summary.title  | truncate:20 }}
-                                        </h2> {{summary.summary | truncate:100}}
+                                        </h2> {{summary.summary | truncate:90}}
                                         <a ng-href="{{summary.url}}" target="_blank" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Read more</a>
                                     </div>
                                 </div>
@@ -55,7 +56,7 @@
                             <div class="mdl-grid">
                                 <div class="mdl-cell mdl-cell--4-col" ng-repeat="tweet in tweets">
                                     <div class="query-card mdl-card mdl-shadow--2dp">
-                                        <div class="mdl-card__supporting-text" ng-click="reachLink(tweet.id)">
+                                        <div class="mdl-card__supporting-text" ng-click="reachLink(tweet.url)">
                                             <div ng-bind-html="tweet.text_fr_hl"></div>
                                         </div>
                                         <div class="entities-list mdl-card__actions mdl-card--border" ng-show="tweet.entities.length>0">
@@ -64,13 +65,20 @@
                                             </button>
                                         </div>
                                         <div class="mdl-card__actions mdl-card--border">
-                                            <button class="user-profile mdl-button mdl-js-button mdl-button--fab" data-bg="{{tweet.profile_image_url}}" get-bg>
+                                            <button ng-click="goToUser(tweet.url)" class="user-profile mdl-button mdl-js-button mdl-button--fab" data-bg="{{tweet.profile_image_url}}" get-bg>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div id="graph" ng-show="showGraph == true">
+                        <div id="graph-title">Graph search for {{graphEntity}}</div>
+                        <div id="close" ng-click="showGraph=false">
+                            <i class="fa fa-close"></i>
+                        </div>
+                        <div id="graph-target" class="tank-container"></div>
                     </div>
                     <div id="news" class="mdl-tabs__panel mdl-grid">
                         <ul>
@@ -108,6 +116,7 @@
         <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="/bower_components/material-design-lite/material.min.js"></script>
+        <script src="js/tank-browser.min.js"></script>
         <script src="js/main.js"></script>
 </body>
 

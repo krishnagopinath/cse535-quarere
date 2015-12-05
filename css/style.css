@@ -11,6 +11,33 @@ body,
     user-select: none;
 }
 
+::-webkit-input-placeholder {
+    color: #F3E5F5;
+    font-weight: lighter;
+    font-size: 34px;
+    line-height: 24px;
+}
+
+.css-typing {
+    width: 6em;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-animation: type 3s steps(50, end);
+    animation: type 3s steps(50, end);
+}
+
+@keyframes type {
+    from {
+        width: 0;
+    }
+}
+
+@-webkit-keyframes type {
+    from {
+        width: 0;
+    }
+}
+
 .fa {
     margin: 0 2px 0 2px;
 }
@@ -23,15 +50,12 @@ body,
 .side-pane .mdl-textfield {
     margin: 70% 0 0 4%;
     font-size: 2em;
+    outline: none !important;
 }
 
 .side-pane .mdl-textfield__input {
     border-bottom-color: #F3E5F5;
-    color: #F3E5F5;
-    font-size: 34px;
-}
-
-.side-pane .mdl-textfield__label {
+    outline: none !important;
     color: #F3E5F5;
     font-weight: lighter;
     font-size: 34px;
@@ -53,7 +77,8 @@ body,
     text-transform: lowercase !important;
 }
 
-.side-pane .facet-grid button:hover,.side-pane .facet-grid button.selected {
+.side-pane .facet-grid button:hover,
+.side-pane .facet-grid button.selected {
     background-color: #ff4081;
     border-color: #ff4081;
 }
@@ -115,6 +140,12 @@ body,
     left: 28%;
 }
 
+#fillers h1 {
+    padding-left: 23%;
+    color: #CFD8DC;
+    font-size: 11em;
+}
+
 #fillers i {
     font-size: 20em;
     color: #CFD8DC;
@@ -130,6 +161,44 @@ body,
     margin: 1% 0 1% 0;
     height: 100%;
     overflow-y: auto;
+}
+
+#graph {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 20%;
+    width: 80%;
+    background-color: #fff;
+    height: 100.2%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#graph #close {
+    float: right;
+    cursor: pointer;
+}
+
+#graph #graph-title {
+    font-size: 2em;
+    float: left;
+    padding-top: 1%;
+    padding-left: 1%;
+}
+
+#graph #close i {
+    font-size: 2em;
+}
+
+#graph #graph-target {
+    top: 9%;
+    position: relative;
+    left: -19%;
+}
+
+#graph .tank-container-graphtools {
+    right: -19%;
 }
 
 #tweets .page-content {
