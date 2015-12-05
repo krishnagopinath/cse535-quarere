@@ -28,7 +28,7 @@ var getSummaries = function(entities, onDone) {
                 var summary = {}
 
                 //no data found, check related topics
-                if (response.RelatedTopics) {
+                if (response.RelatedTopics && response.RelatedTopics.length) {
                     var topic = response.RelatedTopics[0];
                     summary = {
                         name: entity,

@@ -9,7 +9,7 @@ var router = express.Router();
 
 var client = solr.createClient({
     solrVersion: '4.0',
-    host: 'ukkk58981644.kushalb.koding.io',
+    host: '192.168.1.169',
     port: 8983,
     core: 'bm25'
 });
@@ -43,7 +43,6 @@ var getSolrResponse = function(req, res, next) {
             primary_entity_types: 1,
             sec_entity_types: 1
         })
-        .mm(2)
         .hl({
             on: true,
             simplePre: "<span class='hl-text'>",
@@ -53,13 +52,28 @@ var getSolrResponse = function(req, res, next) {
         .start(req.query.start)
         .rows(req.query.rows);
 
+    //facets
+    if (req.query.facets) {
+        query.facet({
+            on: true,
+            mincount: 1,
+            field: ['primary_entity_types']
+        });
+        if (req.query.fq) {
+            req.query.fq.split(',').forEach(function (fqItem) {
+                query.matchFilter("primary_entity_types", fqItem);
+                console.log(fqItem)
+            });            
+        }
+    }
+
+
     client.search(query, function(err, obj) {
         if (err) {
             console.log(err);
         }
 
         /* add highlighting */
-
         Object.keys(obj.highlighting).forEach(function(key) {
             var index = 0;
             var doc = obj.response.docs.filter(function(doc, i, _) {
@@ -74,6 +88,28 @@ var getSolrResponse = function(req, res, next) {
         });
 
         obj.response.q = req.query.q;
+
+
+        obj.response.facets = (function() {
+
+
+            var facetItems = [];
+
+            if (obj.facet_counts) {
+                facets = obj.facet_counts.facet_fields.primary_entity_types;
+
+                for (var i = 0; i < facets.length; i+=2) {
+                    facetItems.push({
+                        "name" : facets[i],
+                        "count" : facets[i+1],
+                        
+                    })
+                };
+            }
+
+            return facetItems;
+        })();
+
         res.queryResult = obj.response;
         next();
     });
@@ -124,6 +160,8 @@ var getDDGSummaries = function(req, res, next) {
 var getWikiSummaries = function(req, res, next) {
 
     if (req.query.start == 0) {
+        /*
+        //removed for the sake of preserving order, so that relevant summaries stay on top
         //filter out entities that don't have data
         var entities = (function() {
             return res.queryResult.summaries.filter(function(value) {
@@ -138,9 +176,11 @@ var getWikiSummaries = function(req, res, next) {
         var summaries = res.queryResult.summaries.filter(function(value) {
             return value.hasData;
         });
+        console.log(entities);
+        */
 
-        wiki.getSummaries(entities, function(wikiSummaries) {
-            res.queryResult.summaries = summaries.concat(wikiSummaries);
+        wiki.getSummaries(res.queryResult.summaries, function(wikiSummaries) {
+            res.queryResult.summaries = wikiSummaries;
             next();
         });
 
@@ -150,6 +190,7 @@ var getWikiSummaries = function(req, res, next) {
 }
 
 var sendResponse = function(req, res, next) {
+    
     res.send(res.queryResult);
 }
 
