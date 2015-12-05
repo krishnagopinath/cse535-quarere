@@ -38,6 +38,45 @@ body,
     line-height: 24px;
 }
 
+.side-pane .facet-grid {
+    margin: 2% 1% 2% 2%;
+}
+
+.side-pane .facet-grid button {
+    border: solid 1px #F3E5F5;
+    color: #F3E5F5;
+    padding: 2%;
+    font-size: 20px;
+    margin: 2%;
+    height: 20%;
+    border-radius: 0;
+    text-transform: lowercase !important;
+}
+
+.side-pane .facet-grid button:hover,.side-pane .facet-grid button.selected {
+    background-color: #ff4081;
+    border-color: #ff4081;
+}
+
+.side-pane .facet {
+    color: #F3E5F5;
+    font-weight: 300;
+    text-decoration: none;
+    margin: 2% 0 2% 4%;
+    padding: 3%;
+    font-size: 2em;
+}
+
+.facet-filter .facet-no {
+    background-color: #ff4081;
+    padding: 0 1% 0 1%;
+    font-size: 20px;
+}
+
+.side-pane .mdl-navigation .facet-filter:hover {
+    border-bottom: 1px dotted #F3E5F5;
+}
+
 .mdl-textfield.is-focused .mdl-textfield__focus-helper {
     box-shadow: 0 0 0px 8px rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.1);
@@ -137,9 +176,11 @@ body,
 
 #summaries .mdl-card > .mdl-card__title {
     color: #fff;
-    background: bottom right 15% no-repeat #46B6AC;
     height: 188px;
     width: inherit;
+    background-color: #46B6AC;
+    background-repeat: no-repeat;
+    background-position: bottom right 15%;
 }
 
 #summaries .mdl-card__supporting-text {

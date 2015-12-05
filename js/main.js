@@ -22,12 +22,14 @@ app.factory('msgBus', function($rootScope) {
 
 app.factory('solrService', function($http) {
     return {
-        getDocs: function(q, start) {;
+        getDocs: function(q, start, fq) {
             return $http.get('http://192.168.1.187:3000/search', {
                 params: {
                     q: q,
                     start: start,
-                    rows: 12
+                    rows: 12,
+                    fq: fq,
+                    facets: 1
                 }
             });
         }
@@ -55,7 +57,48 @@ app.controller('SearchController', function($scope, msgBus) {
             msgBus.emitMsg('query', val);
         }
     }
+
+    $scope.facetTypes = [];
+    $scope.facets = [];
+
+    $scope.changeFacet = function(facet) {
+        if ($scope.facets.indexOf(facet) == -1) {
+            $scope.facets.push(facet);
+        } else {
+            $scope.facets = $scope.facets.filter(function(facetItem) {
+                return facet != facetItem;
+            })
+        }
+
+        msgBus.emitMsg('facet', $scope.facets);
+    }
+
+
+    msgBus.onMsg('facetTypes', function(e, data) {
+        $scope.facetTypes = data;
+    });
+})
+
+app.directive('toggleFacet', function() {
+    return {
+        restrict: 'A',
+        scope: "=",
+        link: function(scope, elem, attrs) {
+            elem.bind("click", function() {
+                var self = angular.element(this);
+                //change class
+                if (self.hasClass('selected')) {
+                    self.removeClass('selected');
+                } else {
+                    self.addClass('selected')
+                };
+
+                scope.changeFacet(attrs.entity);
+            });
+        }
+    };
 });
+
 
 app.controller('ResultController', function($scope, msgBus, solrService, newsService) {
 
@@ -64,8 +107,9 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
     $scope.news = [];
     $scope.showInteracts = false; // TODO : Remove this and use the length of the tweet and news responses
     $scope.showTweets = true;
-    $scope.showScrollUpForTweets = false;
-
+    $scope.facets = [];
+    $scope.fq = [];
+    $scope.facetSet = false;
     $scope.reachLink = function(link) {
         window.open(link, '_blank');
     }
@@ -80,20 +124,30 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
         $scope.typing = true;
     });
 
-    $scope.getDocs = function() {
+    $scope.getDocs = function(init) {
+        if (init) {
+            $scope.docCount = 0
+            $scope.nextStartCount = 0;
+        }
+
         if ($scope.nextStartCount < $scope.docCount || !$scope.docCount) {
-            solrService.getDocs($scope.query, $scope.nextStartCount).then(function(res) {
-                console.log($scope.nextStartCount);
+            solrService.getDocs($scope.query, $scope.nextStartCount, $scope.fq.join(',')).then(function(res) {
+
                 $scope.docCount = res.data.numFound;
                 $scope.showInteracts = true;
                 $scope.tweets = $scope.tweets.concat(res.data.docs);
 
                 if ($scope.nextStartCount == 0) {
-                    $scope.q = res.data.q;
-                    $scope.summaries = res.data.summaries;
+                    if (!$scope.facetSet) {
+                        $scope.q = res.data.q;
+                        $scope.summaries = res.data.summaries;
+                        msgBus.emitMsg('facetTypes', res.data.facets);
+                    }
+                   
+                    $scope.tweets = res.data.docs;
                 }
 
-
+                console.log(res.data.facets);
                 $scope.nextStartCount += res.data.docs.length;
 
             });
@@ -104,17 +158,22 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
 
     msgBus.onMsg('query', function(e, data) {
 
-        $scope.docCount = 0
-        $scope.nextStartCount = 0;
-
         $scope.query = data;
+        $scope.facetSet = false;
 
-        $scope.getDocs();
+        $scope.getDocs(true);
 
         newsService.getNews(data).then(function(res) {
             $scope.showInteracts = true;
             $scope.news = res.data;
         });
+    }, $scope);
+
+
+    msgBus.onMsg('facet', function(e, data) {
+        $scope.facetSet = true;
+        $scope.fq = data;
+        $scope.getDocs(true);
     }, $scope);
 });
 

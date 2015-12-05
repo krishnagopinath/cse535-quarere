@@ -44,8 +44,7 @@ app.controller('SearchController', function($scope, msgBus) {
             msgBus.emitMsg('query', val);
         }
     }
-});
-
+})
 app.controller('ResultController', function($scope, msgBus, solrService, newsService) {
 
     $scope.query = '';
@@ -107,7 +106,6 @@ app.directive('scrollEnd', function() {
             var raw = elem[0];
 
             elem.bind('scroll', function() {
-                console.log(raw.scrollTop + raw.offsetHeight, raw.scrollHeight);
                 if (raw.scrollTop + raw.offsetHeight + 1 >= (raw.scrollHeight)) {
                     scope.getTweets();
                 }
@@ -123,7 +121,7 @@ app.directive('scrollToTop', function() {
         scope: '=',
         link: function(scope, elem, attrs) {
             elem.bind("click", function(scope, elem, attrs) {
-               window.scrollTo(0, 0);
+                window.scrollTo(0, 0);
             });
         }
     };

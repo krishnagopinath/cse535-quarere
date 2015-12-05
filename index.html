@@ -16,12 +16,9 @@
                 <input class="mdl-textfield__input" type="text" ng-model="query" ng-keypress="sendQuery($event, query)" />
                 <label class="mdl-textfield__label" for="sample1">putin syria</label>
             </div>
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-            </nav>
+            <div class="facet-grid">
+                <button ng-repeat="facet in facetTypes" class="mdl-button mdl-js-button" data-entity="{{facet.name}}" toggle-facet>{{facet.name }} ({{facet.count}})</button>
+            </div>
         </div>
         <main ng-controller="ResultController" class="mdl-layout__content main-pane">
             <div class="page-content">
