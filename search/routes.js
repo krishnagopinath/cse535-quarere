@@ -39,6 +39,9 @@ var getSolrResponse = function(req, res, next) {
         .edismax()
         .qf({
             text_fr: 1,
+					  text_en: 1,
+					  text_ru: 1,
+					  text_de: 1,
             tweet_hashtags: 1,
             entities: 1,
             primary_entity_types: 1,
@@ -48,7 +51,7 @@ var getSolrResponse = function(req, res, next) {
             on: true,
             simplePre: "<span class='hl-text'>",
             simplePost: "</span>",
-            fl: "text_fr"
+            fl: "text_fr, text_en, text_de, text_ru"
         })
         .start(req.query.start)
         .rows(req.query.rows);
@@ -83,8 +86,15 @@ var getSolrResponse = function(req, res, next) {
                     return true;
                 }
             })[0];
-
-            doc.text_fr_hl = obj.highlighting[key]['text_fr'][0];
+						if(obj.highlighting[key]['text_fr']) {
+            	doc.text_fr_hl = obj.highlighting[key]['text_fr'][0];
+						} else if(obj.highlighting[key]['text_en']) {
+            	doc.text_fr_hl = obj.highlighting[key]['text_en'][0];
+						} else if(obj.highlighting[key]['text_ru']) {
+            	doc.text_fr_hl = obj.highlighting[key]['text_ru'][0];
+						} else if(obj.highlighting[key]['text_de']) {
+            	doc.text_fr_hl = obj.highlighting[key]['text_de'][0];
+						}
             obj.response.docs[index] = doc;
         });
 
