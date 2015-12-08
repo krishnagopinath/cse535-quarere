@@ -22,12 +22,13 @@ var buildQuery = function(req, res, next) {
     var allLang = [];
     //TODO : implement promises EVERYWHERE
     translate(q, ['en'], function(en) {
-        alchemy.getEntities(en.join(' '), function(entities) {
+        //alchemy.getEntities(en.join(' '), function(entities) {
             translate(q, ['en', 'fr', 'ru', 'de'], function(allLang) {
-                req.query.q = (allLang.join(' ') + ' ' + entities.join(' ')).toLowerCase();
+                req.query.q = (allLang.join(' ')).toLowerCase();
+								console.log("q:"+req.query.q);
                 next();
             });
-        });
+        //});
     });
 };
 
@@ -43,7 +44,7 @@ var getSolrResponse = function(req, res, next) {
 					  text_ru: 1,
 					  text_de: 1,
             tweet_hashtags: 1,
-            entities: 1
+            entities: 2
             //primary_entity_types: 1
             //sec_entity_types: 1
         })
@@ -137,7 +138,7 @@ var getDDGSummaries = function(req, res, next) {
 
             var arr = res.queryResult.docs
                 //get top 5 docs
-                .slice(0, 15)
+                .slice(0, 10)
                 //get entities from top 5
                 .map(function(doc) {
                     return doc.entities;
