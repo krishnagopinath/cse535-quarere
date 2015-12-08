@@ -261,8 +261,7 @@ app.directive('getBg', function() {
         scope: '=',
         link: function(scope, elem, attrs) {
             attrs.$observe('bg', function(value) {
-                elem.css('background', 'url(' + value + ')');
-
+                elem.css('background', 'url(' + value + ') no-repeat center');
             });
         }
     };
