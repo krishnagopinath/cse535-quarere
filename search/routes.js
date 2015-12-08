@@ -43,9 +43,9 @@ var getSolrResponse = function(req, res, next) {
 					  text_ru: 1,
 					  text_de: 1,
             tweet_hashtags: 1,
-            entities: 1,
-            primary_entity_types: 1,
-            sec_entity_types: 1
+            entities: 1
+            //primary_entity_types: 1
+            //sec_entity_types: 1
         })
         .hl({
             on: true,
@@ -94,6 +94,8 @@ var getSolrResponse = function(req, res, next) {
             	doc.text_fr_hl = obj.highlighting[key]['text_ru'][0];
 						} else if(obj.highlighting[key]['text_de']) {
             	doc.text_fr_hl = obj.highlighting[key]['text_de'][0];
+						} else {
+							doc.text_fr_hl = doc['text_'+doc.lang];
 						}
             obj.response.docs[index] = doc;
         });
