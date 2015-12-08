@@ -141,7 +141,7 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
         var myTank = new tank({
             id: 'graph-target',
             query: {
-                query: 'MATCH path=(n {name: "' + entity + '"})-[Knows*2]-(result) RETURN result,path ORDER BY result.count DESC'
+                query: 'MATCH path=(n {name: "' + entity + '"})-[Knows*2]-(result) RETURN result,path ORDER BY result.count DESC LIMIT 50'
             },
             neo4j: {
                 url: 'http://192.168.1.169:7474',
