@@ -181,6 +181,7 @@ app.controller('ResultController', function($scope, msgBus, solrService, newsSer
 
                 console.log(res.data.facets);
                 $scope.nextStartCount += res.data.docs.length;
+                $scope.totalDocs = res.data.numFound;
 
             });
         } else {
